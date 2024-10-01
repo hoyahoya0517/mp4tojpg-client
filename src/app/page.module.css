@@ -1,0 +1,75 @@
+.home {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+}
+.uploadWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 350px;
+  background-color: #353b8b;
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 3333;
+}
+.upload {
+  position: relative;
+  background-color: #2b3072;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px dashed white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.uploadIcon {
+  padding: 40px 0 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.uplaodDetail {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+}
+.start {
+  position: absolute;
+  background-color: #2b3072;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 50px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.start:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #2b3072;
+  border: 3px solid #2b3072;
+}
+.start span {
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+.errorMessage {
+  position: absolute;
+  top: -7%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  font-size: 1rem;
+  color: #2b3072;
+}
