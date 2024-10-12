@@ -13,7 +13,7 @@
   background-color: #353b8b;
   border-radius: 8px;
   padding: 10px;
-  z-index: 3333;
+  z-index: 1111;
 }
 .upload {
   position: relative;
@@ -72,4 +72,45 @@
   display: flex;
   font-size: 1rem;
   color: #2b3072;
+}
+.loadingWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.38);
+  position: fixed;
+  z-index: 2222;
+}
+.loading {
+  width: 40px;
+  height: 40px;
+  border: 5px solid #3498db;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mainWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 500px;
+  background-color: transparent;
+  overflow: hidden;
+  z-index: 3333;
+  cursor: pointer;
 }

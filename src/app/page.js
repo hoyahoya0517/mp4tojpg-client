@@ -1,17 +1,98 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import * as THREE from "three";
 import styles from "./page.module.css";
 import { useDropzone } from "react-dropzone";
 import { FaCloudArrowUp } from "react-icons/fa6";
 import { FaRegFileVideo } from "react-icons/fa6";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useTransform } from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  OrthographicCamera,
+  ScrollControls,
+  useAspect,
+  useScroll,
+} from "@react-three/drei";
+
+const exArray = [
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_1.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_2.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_3.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_4.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_5.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_6.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_7.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_8.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_9.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_10.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_11.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_12.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_13.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_14.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_15.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_16.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_17.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_18.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_19.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_20.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_21.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_22.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_23.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_24.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_25.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_26.jpg",
+  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_27.jpg",
+];
+function Scene(props) {
+  const { urlArray } = props;
+  const scroll = useScroll();
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [loadingArray, setLoadingArray] = useState([
+    new THREE.TextureLoader().load(urlArray[0]),
+  ]);
+  const [currentTexture, setCurrentTexture] = useState(
+    new THREE.TextureLoader().load(urlArray[0])
+  );
+  const size = useAspect(800, 500, 1);
+  const handleClick = () => {
+    window.open(urlArray[currentIdx]);
+  };
+  useEffect(() => {
+    let tmpArray = [];
+    for (let i = 0; i < urlArray?.length; i++) {
+      let texture = new THREE.TextureLoader().load(urlArray[i]);
+      tmpArray.push(texture);
+    }
+    setLoadingArray(tmpArray);
+  }, [urlArray]);
+  useEffect(() => {
+    if (loadingArray[currentIdx].isTexture)
+      setCurrentTexture(loadingArray[currentIdx]);
+  }, [loadingArray, currentIdx]);
+  useFrame(() => {
+    if (!urlArray) return;
+    const idx = Math.floor(scroll.offset * (urlArray?.length - 1));
+    console.log(idx);
+    if (idx !== currentIdx) setCurrentIdx(idx);
+  });
+  return (
+    <mesh scale={size} onClick={handleClick}>
+      <planeGeometry />
+      <meshBasicMaterial map={currentTexture} />
+    </mesh>
+  );
+}
 
 export default function Home() {
   const [sendVideo, setSendVideo] = useState(null);
   const [sendReady, setSendReady] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [urlArray, setUrlArray] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (file) => {
+    setIsLoading(true);
     let formData = new FormData();
     formData.append("video", sendVideo);
     try {
@@ -22,6 +103,16 @@ export default function Home() {
       });
       const json = await data.json();
       console.log(json);
+      if (!json) {
+        setIsLoading(false);
+        setSendReady(false);
+        setTimeout(() => {
+          setSendVideo(null);
+        }, 600);
+        throw new Error();
+      }
+      setUrlArray(json);
+      setIsLoading(false);
     } catch (error) {
       setErrorMessage("Something went wrong, please try again");
       setSendReady(false);
@@ -54,7 +145,7 @@ export default function Home() {
     <div className={styles.home}>
       <div className={styles.uploadWrapper}>
         <AnimatePresence>
-          {!sendVideo && (
+          {!sendVideo && !isLoading && !urlArray && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{
@@ -80,7 +171,11 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{
                   opacity: 1,
-                  transition: { delay: 0.6, duration: 0.7, ease: "easeIn" },
+                  transition: {
+                    delay: 0.6,
+                    duration: 0.7,
+                    ease: "easeIn",
+                  },
                 }}
                 exit={{ opacity: 0, transition: { duration: 0.5 } }}
                 className={styles.uplaodDetail}
@@ -92,7 +187,7 @@ export default function Home() {
           )}
         </AnimatePresence>
         <AnimatePresence>
-          {sendReady && (
+          {sendReady && !isLoading && !urlArray && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{
@@ -118,7 +213,11 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{
                   opacity: 1,
-                  transition: { delay: 0.6, duration: 0.7, ease: "easeIn" },
+                  transition: {
+                    delay: 0.6,
+                    duration: 0.7,
+                    ease: "easeIn",
+                  },
                 }}
                 exit={{ opacity: 0, transition: { duration: 0.5 } }}
                 className={styles.uplaodDetail}
@@ -132,7 +231,6 @@ export default function Home() {
         <AnimatePresence>
           {errorMessage && (
             <motion.div
-              onClick={handleSubmit}
               initial={{ opacity: 0 }}
               animate={{
                 opacity: 1,
@@ -147,7 +245,7 @@ export default function Home() {
         </AnimatePresence>
       </div>
       <AnimatePresence>
-        {sendReady && (
+        {sendReady && !isLoading && !urlArray && (
           <motion.div
             onClick={handleSubmit}
             initial={{ top: "50%" }}
@@ -162,6 +260,38 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 1.5, ease: "backInOut" },
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.5 } }}
+            className={styles.loadingWrapper}
+          >
+            <div className={styles.loading}></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {urlArray && (
+        <motion.div
+          initial={{ top: "-200%" }}
+          animate={{
+            top: "50%",
+            transition: { duration: 1, ease: "easeOut" },
+          }}
+          className={styles.mainWrap}
+        >
+          <Canvas>
+            <ScrollControls page={urlArray?.length || 0} damping={0}>
+              <Scene urlArray={urlArray} />
+              <OrthographicCamera />
+            </ScrollControls>
+          </Canvas>
+        </motion.div>
+      )}
     </div>
   );
 }

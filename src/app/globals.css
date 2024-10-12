@@ -130,3 +130,15 @@ table {
 a {
   text-decoration: none;
 }
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b3072;
+  border-radius: 0px; /* 스크롤바 둥근 테두리 */
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+}
