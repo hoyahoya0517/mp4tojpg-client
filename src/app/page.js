@@ -25,7 +25,7 @@ function Scene(props) {
   const [currentTexture, setCurrentTexture] = useState(
     new THREE.TextureLoader().load(urlArray[0])
   );
-  const size = useAspect(800, 500, 1);
+  const size = useAspect(854, 480, 1);
   const handleClick = () => {
     window.open(urlArray[currentIdx]);
   };
