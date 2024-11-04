@@ -73,7 +73,6 @@ function Scene(props) {
   useFrame(() => {
     if (!urlArray) return;
     const idx = Math.floor(scroll.offset * (urlArray?.length - 1));
-    console.log(idx);
     if (idx !== currentIdx) setCurrentIdx(idx);
   });
   return (
@@ -102,7 +101,6 @@ export default function Home() {
         body: formData,
       });
       const json = await data.json();
-      console.log(json);
       if (!json) {
         setIsLoading(false);
         setSendReady(false);
@@ -114,6 +112,7 @@ export default function Home() {
       setUrlArray(json);
       setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       setErrorMessage("Something went wrong, please try again");
       setSendReady(false);
       setTimeout(() => {
@@ -122,9 +121,9 @@ export default function Home() {
     }
   };
   const onDrop = (data) => {
-    const MAX_VIDEO_SIZE = 100 * 1024 * 1024;
+    const MAX_VIDEO_SIZE = 30 * 1024 * 1024;
     if (data[0].size > MAX_VIDEO_SIZE) {
-      setErrorMessage("Please add file that is 100MB or less");
+      setErrorMessage("Please add file that is 30MB or less");
       setSendReady(false);
       setTimeout(() => {
         setSendVideo(null);
