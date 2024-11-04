@@ -15,35 +15,6 @@ import {
   useScroll,
 } from "@react-three/drei";
 
-const exArray = [
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_1.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_2.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_3.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_4.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_5.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_6.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_7.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_8.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_9.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_10.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_11.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_12.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_13.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_14.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_15.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_16.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_17.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_18.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_19.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_20.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_21.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_22.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_23.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_24.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_25.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_26.jpg",
-  "https://sakaomp4tojpg.s3.ap-northeast-2.amazonaws.com/1728536993427_27.jpg",
-];
 function Scene(props) {
   const { urlArray } = props;
   const scroll = useScroll();
@@ -95,7 +66,7 @@ export default function Home() {
     let formData = new FormData();
     formData.append("video", sendVideo);
     try {
-      const data = await fetch("http://localhost:8080/video", {
+      const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/video`, {
         method: "POST",
         headers: {},
         body: formData,
